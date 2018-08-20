@@ -17,6 +17,7 @@ Once you have the above, just follow these steps:
 3. In `config.json`, update `tweets.source_account_url` with the source Twitter account, `toots.host_instance` with the HTTPS URL of your instance, and `toots.app_secure_token` with the access token you generated.
 
 For example:
+
 `tweets.source_account_url` = https://twitter.com/SarcasmMother
 
 `toots.host_instance` = https://botsin.space
