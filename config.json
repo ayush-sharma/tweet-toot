@@ -1,0 +1,8 @@
+{
+	"gen.APP_NAME": "Tweet-Toot",
+	"gen.log_timestamp": "%Y-%m-%d %H:%M:%S",
+	"tweets.source_account_url": "",
+	"toots.host_instance": "",
+	"toots.app_secure_token": "",
+	"toots.cache_path": "/tmp/"
+}
