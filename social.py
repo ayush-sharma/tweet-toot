@@ -65,6 +65,8 @@ def tootTheTweet(tweet):
     host_instance = helpers._config('toots.host_instance')
     token = helpers._config('toots.app_secure_token')
 
+    tweet_id = tweet['id']
+
     if not host_instance:
 
         helpers._error('tootTheTweet() => Your host Mastodon instance URL (' + host_instance + ') was incorrect.')
@@ -79,7 +81,7 @@ def tootTheTweet(tweet):
 
     headers = {}
     headers['Authorization'] = 'Bearer ' + token
-    headers['Idempotency-Key'] = tweet['id']
+    headers['Idempotency-Key'] = tweet_id
 
     data = {}
     data['status'] = tweet['text']
@@ -89,7 +91,7 @@ def tootTheTweet(tweet):
     tweet_check_file = Path(tweet_check_file_path)
     if tweet_check_file.is_file():
 
-        helpers._info('tootTheTweet() => This tweet has already been posted. Skipping...')
+        helpers._info('tootTheTweet() => Tweet ' + tweet_id + ' was already posted. Skipping...')
 
         return False
 
@@ -99,21 +101,21 @@ def tootTheTweet(tweet):
         tweet_check.write(tweet['text'])
         tweet_check.close()
 
-        helpers._info('tootTheTweet() => Caching new tweet.')
+        helpers._info('tootTheTweet() => New tweet ' + tweet_id + ' => "' + tweet['text'] + '".')
 
     response = requests.post(
         url=host_instance + '/api/v1/statuses', data=data, headers=headers)
 
     if response.status_code == 200:
 
-        helpers._info('tootTheTweet() => OK. Posted tweet to Mastodon.')
+        helpers._info('tootTheTweet() => OK. Posted tweet ' + tweet_id + 'to Mastodon.')
         helpers._info('tootTheTweet() => Response: ' + response.text)
 
         return True
 
     else:
 
-        helpers._info('tootTheTweet() => FAIL. Could not post tweet to Mastodon.')
+        helpers._info('tootTheTweet() => FAIL. Could not post tweet ' + tweet_id + 'to Mastodon.')
         helpers._info('tootTheTweet() => Response: ' + response.text)
 
         return False
