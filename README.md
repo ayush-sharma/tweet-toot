@@ -1,28 +1,30 @@
 # Tweet-Toot
-Tweet-Toot is a small Python3 script(s) to convert a tweet to a toot. It's basically a Twitter relay for Mastodon.
+Tweet-Toot is a small Python3 project to convert a tweet to a toot. It's basically a Twitter relay for Mastodon.
 
-The way it works is this: Tweet-Toot can "watch" a Twitter account and repost new tweets to any Mastodon account you configure. Just clone this repo, configure the script, add it to a cron job, and it will repost a new content.
+The way it works is this: add Tweet-Toot as a cron job, and it will repost new tweets to any Mastodon account you configure. Just clone this repo, configure the script, add it to a cron job, and it will get cracking.
 
 ## How do I install this?
-Getting Tweet-Toot working is pretty easy. Before you can install it, you're going to need the following:
+Getting Tweet-Toot working is pretty easy. Before you can install it, you're going to need to do the following:
 
-- Pick a Mastodon instance of your choice. You'll need this instance URL.
-- Create an app on the Mastodon instance of your choice and generate an access token.
-- You'll also need the Twitter URL of the account you want to watch.
+- Pick a Mastodon instance of your choice. You'll need this instance's URL.
+- Create an app on this Mastodon instance and generate an access token.
+- Get the Twitter URL of the account you want to watch.
 
 Once you have the above, just follow these steps:
 
 1. Clone this repository.
 2. Install the Python3 libraries `requests` and `beautifulsoup` mentioned in the `requirements.txt` file.
-3. In `config.json`, update `tweets.source_account_url` with the source Twitter account, `toots.host_instance` with the HTTPS URL of your instance, and `toots.app_secure_token` with the access token you generated.
+3. In `config.json`, update the following:
+
+- `tweets.source_account_url`: The source Twitter account.
+- `toots.host_instance`: The HTTPS URL of your instance.
+- `toots.app_secure_token`: The Mastodon app access token.
 
 For example:
 
-`tweets.source_account_url` = https://twitter.com/SarcasmMother
-
-`toots.host_instance` = https://botsin.space
-
-`toots.app_secure_token` = XXXXX-XXXXX-XXXXX-XXXXX-XXXXX'
+- `tweets.source_account_url` = https://twitter.com/SarcasmMother
+- `toots.host_instance` = https://botsin.space
+- `toots.app_secure_token` = XXXXX-XXXXX-XXXXX-XXXXX-XXXXX'
 
 
 ## How do I run it?
