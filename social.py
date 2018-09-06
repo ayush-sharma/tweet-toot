@@ -39,7 +39,7 @@ def getTweets():
 
         return False
 
-    helpers._info('getTweets => Fetched tweets for ' + url + '.')
+    helpers._info('getTweets() => Fetched tweets for ' + url + '.')
 
     for tweet in timeline:
 
