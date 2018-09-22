@@ -47,9 +47,7 @@ def _info(message):
     message {string} -- Log message.
     """
 
-    timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-
-    print(_config('gen.APP_NAME') + ' | ' + timestamp + ' _info > ' + message)
+    print(' _info > ' + message)
 
 
 def _error(message):
@@ -59,6 +57,4 @@ def _error(message):
     message {string} -- Log message.
     """
 
-    timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-
-    print(_config('gen.APP_NAME') + ' | ' + timestamp + ' error > ' + message)
+    print(' _error > ' + message)
