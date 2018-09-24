@@ -47,6 +47,9 @@ Tweet-Toot | 2018-09-06 22:59:11 _info > __main__ => Tooting less is tooting mor
 
 ```
 
+## Tutorial
+The tutorial for this code can be found here: [Tweet-Toot: Building a bot for Mastodon using Python](https://notes.ayushsharma.in/2018/09/tweet-toot-building-a-bot-for-mastodon-using-python).
+
 ## Running with Docker
 I've added a `Dockerfile` with this repo so you can get up and running quickly.
 
