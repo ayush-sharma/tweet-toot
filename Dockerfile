@@ -33,3 +33,7 @@ RUN wget -qO - --header="X-Papertrail-Token: "$papertrail_token https://papertra
 RUN crontab -l > /tmp/crontab;\
 	echo '* * * * * cd /root/tweet-toot; python3 /root/tweet-toot/run.py >> /tmp/tweet-toot.log' >> /tmp/crontab;\
 	crontab /tmp/crontab
+
+RUN touch /tmp/tweet-toot.log
+
+CMD cron && tail -f /tmp/tweet-toot.log
