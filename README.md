@@ -47,6 +47,21 @@ Tweet-Toot | 2018-09-06 22:59:11 _info > __main__ => Tooting less is tooting mor
 
 ```
 
+## Running with Docker
+I've added a `Dockerfile` with this repo so you can get up and running quickly.
+
+1. Update the `config.json` with the Twitter account you want to relay.
+2. Leave the `toots.app_secure_token` blank.
+3. Build your container with the command below:
+
+
+```bash
+docker build --build-arg mastodon_token=<Mastodon_Token> --build-arg papertrail_token=<Papertrail_Token> -t <DockerHub_Repo>:<Repo_Tag> .
+```
+
+The container has support for sending logs to Papertrail. Just add your authentication token. You can get it from your Papertrail client installation command.
+
+
 ## Things to remember
 - The script is designed to toot once per invokation. I recommend timing your cron jobs according to the post frequency that you need instead of modifying the code.
 - Mastodon instance admins are people too. Don't toot-blast your instance and make life harder for them.
