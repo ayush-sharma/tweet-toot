@@ -1,3 +1,4 @@
+import encodings.idna
 import helpers
 import social
 import sys
