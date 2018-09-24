@@ -13,6 +13,7 @@ RUN cd /root;\
 	cd tweet-toot;\
 	pip3 install -r requirements.txt;\
 	apt-get -y purge python3-pip git;\
+	apt-get -y install python3-idna;\
 	apt-get -y autoremove;\
 	apt-get -y autoclean;\
 	# Configure Tweet-Toot
@@ -20,16 +21,15 @@ RUN cd /root;\
 
 # Install Papertrail agent
 RUN wget -qO - --header="X-Papertrail-Token: "$papertrail_token https://papertrailapp.com/destinations/10693082/setup.sh | bash;\
-	wget -qO - https://github.com/papertrail/remote_syslog2/releases/download/v0.20/remote-syslog2_0.20_amd64.deb;\
+	wget - https://github.com/papertrail/remote_syslog2/releases/download/v0.20/remote-syslog2_0.20_amd64.deb;\
 	dpkg -i remote-syslog2_0.20_amd64.deb;\
-	remote_syslog \
-	  -p 22420 \
-	  -d logs7.papertrailapp.com \
-	  --pid-file=/var/run/remote_syslog.pid \
-	  /tmp/tweet-toot.log;\
+		remote_syslog \
+		  -p 22420 \
+		  -d logs7.papertrailapp.com \
+		  --pid-file=/var/run/remote_syslog.pid \
+		  /tmp/tweet-toot.log;\
 	apt-get -y purge wget
 
-RUN my_pwd=`pwd`;\
-	crontab -l > /tmp/crontab;\
-	echo '* * * * * python3 '$my_pwd'/run.py >> /tmp/tweet-toot.log' >> /tmp/crontab;\
+RUN crontab -l > /tmp/crontab;\
+	echo '* * * * * cd /root/tweet-toot; python3 /root/tweet-toot/run.py >> /tmp/tweet-toot.log' >> /tmp/crontab;\
 	crontab /tmp/crontab
