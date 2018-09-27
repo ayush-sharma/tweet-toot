@@ -8,7 +8,7 @@ ARG papertrail_token
 RUN cd /root;\
 	apt-get -y update;\
 	apt-get -y upgrade;\
-	apt-get -y install python3 python3-pip git wget cron;\
+	apt-get -y install python3 python3-pip git wget cron rsyslog;\
 	git clone https://github.com/ayush-sharma/tweet-toot.git;\
 	cd tweet-toot;\
 	pip3 install -r requirements.txt;\
@@ -17,7 +17,8 @@ RUN cd /root;\
 	apt-get -y autoremove;\
 	apt-get -y autoclean;\
 	# Configure Tweet-Toot
-	sed -i 's/"toots.app_secure_token": ""/"toots.app_secure_token": "'$mastodon_token'"/g' config.json
+	sed -i 's/"toots.app_secure_token": ""/"toots.app_secure_token": "'$mastodon_token'"/g' config.json;\
+	sed -i '/imklog/d' /etc/rsyslog.conf
 
 # Install Papertrail agent
 RUN wget -qO - --header="X-Papertrail-Token: "$papertrail_token https://papertrailapp.com/destinations/10693082/setup.sh | bash;\
