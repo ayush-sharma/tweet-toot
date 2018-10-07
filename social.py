@@ -91,9 +91,7 @@ def tootTheTweet(tweet):
     tweet_check_file = Path(tweet_check_file_path)
     if tweet_check_file.is_file():
 
-        helpers._info('tootTheTweet() => Tweet ' + tweet_id + ' was already posted. Skipping...')
-
-        return False
+        helpers._info('tootTheTweet() => Tweet ' + tweet_id + ' was already posted. Reposting...')
 
     else:
 
@@ -101,7 +99,7 @@ def tootTheTweet(tweet):
         tweet_check.write(tweet['text'])
         tweet_check.close()
 
-        helpers._info('tootTheTweet() => New tweet ' + tweet_id + ' => "' + tweet['text'] + '".')
+        helpers._info('tootTheTweet() => New tweet ' + tweet_id + ' => "' + tweet['text'] + '".')    
 
     response = requests.post(
         url=host_instance + '/api/v1/statuses', data=data, headers=headers)
