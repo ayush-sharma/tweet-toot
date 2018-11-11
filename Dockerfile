@@ -19,7 +19,7 @@ RUN cd /root;\
 	sed -i 's/"toots.app_secure_token": ""/"toots.app_secure_token": "'$mastodon_token'"/g' config.json;\
 
 RUN crontab -l > /tmp/crontab;\
-	echo '* * * * * cd /root/tweet-toot; python3 /root/tweet-toot/run.py 2>&1 /tmp/tweet-toot.log' >> /tmp/crontab;\
+	echo '* * * * * cd /root/tweet-toot; python3 /root/tweet-toot/run.py >> /tmp/tweet-toot.log 2>&1' >> /tmp/crontab;\
 	crontab /tmp/crontab
 
 RUN touch /tmp/tweet-toot.log
