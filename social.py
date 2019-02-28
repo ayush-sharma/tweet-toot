@@ -93,13 +93,15 @@ def tootTheTweet(tweet):
 
         helpers._info('tootTheTweet() => Tweet ' + tweet_id + ' was already posted. Reposting...')
 
+        return False
+
     else:
 
         tweet_check = open(tweet_check_file_path, 'w')
         tweet_check.write(tweet['text'])
         tweet_check.close()
 
-        helpers._info('tootTheTweet() => New tweet ' + tweet_id + ' => "' + tweet['text'] + '".')    
+        helpers._info('tootTheTweet() => New tweet ' + tweet_id + ' => "' + tweet['text'] + '".')
 
     response = requests.post(
         url=host_instance + '/api/v1/statuses', data=data, headers=headers)
