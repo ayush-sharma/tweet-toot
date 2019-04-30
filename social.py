@@ -45,8 +45,17 @@ def getTweets():
     for tweet in timeline:
 
         tweet_id = tweet['data-item-id']
-        tweet_text = tweet.select('p.tweet-text')[0].get_text()
+        
+        try:
 
+            tweet_text = tweet.select('p.tweet-text')[0].get_text()
+
+        except:
+            
+            helpers._info('getTweets() => No tweet text found. Moving on...')
+
+            continue
+        
         all_tweets.append({"id": tweet_id, "text": tweet_text})
 
     return all_tweets if len(all_tweets) > 0 else None
