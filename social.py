@@ -2,7 +2,6 @@ import helpers
 import requests
 from bs4 import BeautifulSoup
 from pathlib import Path
-import codecs
 
 
 def getTweets():
@@ -107,7 +106,9 @@ def tootTheTweet(tweet):
 
     else:
 
-        tweet_check = codecs.open(tweet_check_file_path, mode='w', encoding='utf-8')
+        tweet['text'].encoding('utf-8')
+        
+        tweet_check = open(tweet_check_file_path, mode='w')
         tweet_check.write(tweet['text'])
         tweet_check.close()
 
