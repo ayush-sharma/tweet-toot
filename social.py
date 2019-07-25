@@ -2,7 +2,7 @@ import helpers
 import requests
 from bs4 import BeautifulSoup
 from pathlib import Path
-
+import base64
 
 def getTweets():
     """ Get list of tweets, with tweet ID and content, from configured Twitter account URL.
@@ -106,7 +106,7 @@ def tootTheTweet(tweet):
 
     else:
 
-        tweet['text'].encoding('utf-8')
+        tweet['text'].encode('utf-8')
         
         tweet_check = open(tweet_check_file_path, mode='w')
         tweet_check.write(tweet['text'])
