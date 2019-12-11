@@ -4,7 +4,7 @@ import social
 import sys
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     """ It all starts here...
 
@@ -15,20 +15,13 @@ if __name__ == '__main__':
     tweets = social.getTweets()
 
     if not tweets:
-
-        helpers._error(
-            '__main__ => No tweets fetched.')
-
+        helpers._error("__main__ => No tweets fetched.")
         sys.exit()
 
-    helpers._info('__main__ => ' + str(len(tweets)) + ' tweets fetched.')
+    helpers._info(f"__main__ => {len(tweets)} tweets fetched.")
 
     for tweet in tweets:
-
         if social.tootTheTweet(tweet):
-
-            helpers._info('__main__ => Tooted "' + tweet['text'] + '"')
-            helpers._info(
-                '__main__ => Tooting less is tooting more. Sleeping...')
-
+            helpers._info(f'__main__ => Tooted "{tweet["text"]}"')
+            helpers._info("__main__ => Tooting less is tooting more. Sleeping...")
             sys.exit()
