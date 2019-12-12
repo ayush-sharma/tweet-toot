@@ -13,7 +13,7 @@ Getting Tweet-Toot working is pretty easy. Before you can install it, you're goi
 Once you have the above, just follow these steps:
 
 1. Clone this repository.
-2. Install the Python3 libraries `requests` and `beautifulsoup` mentioned in the `requirements.txt` file.
+2. Install the Python3 libraries: `python3 -m venv venv`, then `source venv/bin/activate` and install dependencies `pip install -r requirements.txt`.
 3. In `config.json`, update the following:
 
 - `tweets.source_account_url`: The source Twitter account.
@@ -29,6 +29,8 @@ For example:
 
 ## How do I run it?
 Once it's all setup, just run the main file like this:
+
+Activate the virtualenv you created on install (if it's not activated yet): `source venv/bin/activate` and run the script:
 
 `python3 run.py`
 

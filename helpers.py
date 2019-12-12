@@ -11,32 +11,24 @@ def _config(key):
     key {string} -- Name of the key in the config.json file.
     """
 
-    my_file = Path('config.json')
+    my_file = Path("config.json")
     if not my_file.is_file():
-
-        print('--- Main config.json file not found. Exiting.')
-
+        print("--- Main config.json file not found. Exiting.")
         sys.exit()
 
-    config_file = open('config.json')
+    config_file = open("config.json")
     config = config_file.read()
 
     if not config:
-
-        print('--- config.json invalid. Exiting.')
-
+        print("--- config.json invalid. Exiting.")
         sys.exit()
 
     config = json.loads(config)
 
     if config.get(key):
-
         return config.get(key)
-
     else:
-
-        print('--- config.json invalid. Exiting.')
-
+        print("--- config.json invalid. Exiting.")
         sys.exit()
 
 
@@ -46,8 +38,7 @@ def _info(message):
     Arguments:
     message {string} -- Log message.
     """
-
-    print(' _info > ' + message)
+    print(f" _info > {message}")
 
 
 def _error(message):
@@ -56,5 +47,4 @@ def _error(message):
     Arguments:
     message {string} -- Log message.
     """
-
-    print(' _error > ' + message)
+    print(f" _error > {message}")
