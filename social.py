@@ -87,6 +87,8 @@ def tootTheTweet(tweet):
         helpers._write_file(timestamp_file, str(tweet['time']))
 
         return False
+    
+    last_timestamp = int(last_timestamp)
 
     headers = {}
     headers["Authorization"] = f"Bearer {token}"
