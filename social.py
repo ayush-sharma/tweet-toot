@@ -49,8 +49,10 @@ def getTweets():
 
             all_tweets.append({"id": tweet_id, "text": tweet_text, "time": tweet_time})
 
-        except:
-            helpers._info("getTweets() => No tweet text found. Moving on...")
+        except Exception as e:
+
+            helpers._error("getTweets() => No tweet text found.")
+            helpers._error(e)
             continue
 
     return all_tweets if len(all_tweets) > 0 else None
@@ -69,7 +71,7 @@ def tootTheTweet(tweet):
 
     host_instance = helpers._config("toots.host_instance")
     token = helpers._config("toots.app_secure_token")
-    timestamp_file = helpers._config("toots.cache_path") + 'last_tweet_tooted'
+    timestamp_file = helpers._config("toots.cache_path") + "last_tweet_tooted"
 
     if not host_instance:
         helpers._error(
@@ -80,31 +82,31 @@ def tootTheTweet(tweet):
     if not token:
         helpers._error("tootTheTweet() => Your Mastodon access token was incorrect.")
         return False
-    
+
     last_timestamp = helpers._read_file(timestamp_file)
     if not last_timestamp:
-        
-        helpers._write_file(timestamp_file, str(tweet['time']))
+
+        helpers._write_file(timestamp_file, str(tweet["time"]))
 
         return False
-    
+
     last_timestamp = int(last_timestamp)
 
     headers = {}
     headers["Authorization"] = f"Bearer {token}"
-    headers["Idempotency-Key"] = tweet['id']
+    headers["Idempotency-Key"] = tweet["id"]
 
     data = {}
     data["status"] = tweet["text"]
     data["visibility"] = "public"
-    
-    if tweet['time'] <= last_timestamp:
 
-         f"tootTheTweet() => No new tweets. Moving on."
+    if tweet["time"] <= last_timestamp:
 
-         return None
+        print("tootTheTweet() => No new tweets. Moving on.")
 
-    last_timestamp = helpers._write_file(timestamp_file, str(tweet['time']))
+        return None
+
+    last_timestamp = helpers._write_file(timestamp_file, str(tweet["time"]))
 
     helpers._info(f'tootTheTweet() => New tweet {tweet["id"]} => "{tweet["text"]}".')
 
