@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import encodings.idna
 import helpers
 import social
