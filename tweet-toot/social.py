@@ -7,7 +7,7 @@ from pathlib import Path
 import base64
 
 
-def getTweets():
+def get_tweets():
     """ Get list of tweets, with tweet ID and content, from configured Twitter account URL.
 
     This function relies on BeautifulSoup to extract the tweet IDs and content of all tweets on the specified page.
@@ -20,7 +20,7 @@ def getTweets():
 
     if not url:
         helpers._error(
-            f"getTweets() => The source Twitter account URL ({url}) was incorrect. Could not retrieve tweets."
+            f"get_tweets() => The source Twitter account URL ({url}) was incorrect. Could not retrieve tweets."
         )
         return False
 
@@ -35,11 +35,11 @@ def getTweets():
 
     if timeline is None:
         helpers._error(
-            f"getTweets() => Could not retrieve tweets from the page. Please make sure the source Twitter account URL ({url}) is correct."
+            f"get_tweets() => Could not retrieve tweets from the page. Please make sure the source Twitter account URL ({url}) is correct."
         )
         return False
 
-    helpers._info(f"getTweets() => Fetched tweets for {url}.")
+    helpers._info(f"get_tweets() => Fetched tweets for {url}.")
 
     for tweet in timeline:
 
@@ -53,14 +53,14 @@ def getTweets():
 
         except Exception as e:
 
-            helpers._error("getTweets() => No tweet text found.")
+            helpers._error("get_tweets() => No tweet text found.")
             helpers._error(e)
             continue
 
     return all_tweets if len(all_tweets) > 0 else None
 
 
-def tootTheTweet(tweet):
+def toot_the_tweet(tweet):
     """ Receieve a dictionary containing Tweet ID and text... and TOOT!
 
     This function relies on the requests library to post the content to your Mastodon account (human or bot).
@@ -77,12 +77,12 @@ def tootTheTweet(tweet):
 
     if not host_instance:
         helpers._error(
-            f"tootTheTweet() => Your host Mastodon instance URL ({host_instance}) was incorrect."
+            f"toot_the_tweet() => Your host Mastodon instance URL ({host_instance}) was incorrect."
         )
         return False
 
     if not token:
-        helpers._error("tootTheTweet() => Your Mastodon access token was incorrect.")
+        helpers._error("toot_the_tweet() => Your Mastodon access token was incorrect.")
         return False
 
     last_timestamp = helpers._read_file(timestamp_file)
@@ -104,26 +104,28 @@ def tootTheTweet(tweet):
 
     if tweet["time"] <= last_timestamp:
 
-        print("tootTheTweet() => No new tweets. Moving on.")
+        print("toot_the_tweet() => No new tweets. Moving on.")
 
         return None
 
     last_timestamp = helpers._write_file(timestamp_file, str(tweet["time"]))
 
-    helpers._info(f'tootTheTweet() => New tweet {tweet["id"]} => "{tweet["text"]}".')
+    helpers._info(f'toot_the_tweet() => New tweet {tweet["id"]} => "{tweet["text"]}".')
 
     response = requests.post(
         url=f"{host_instance}/api/v1/statuses", data=data, headers=headers
     )
 
     if response.status_code == 200:
-        helpers._info(f"tootTheTweet() => OK. Posted tweet {tweet['id']} to Mastodon.")
-        helpers._info(f"tootTheTweet() => Response: {response.text}")
+        helpers._info(
+            f"toot_the_tweet() => OK. Posted tweet {tweet['id']} to Mastodon."
+        )
+        helpers._info(f"toot_the_tweet() => Response: {response.text}")
         return True
 
     else:
         helpers._info(
-            f"tootTheTweet() => FAIL. Could not post tweet {tweet['id']} to Mastodon."
+            f"toot_the_tweet() => FAIL. Could not post tweet {tweet['id']} to Mastodon."
         )
-        helpers._info(f"tootTheTweet() => Response: {response.text}")
+        helpers._info(f"toot_the_tweet() => Response: {response.text}")
         return False
