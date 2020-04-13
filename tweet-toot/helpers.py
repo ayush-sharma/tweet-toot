@@ -4,6 +4,7 @@ import datetime
 import json
 from pathlib import Path
 import sys
+import os
 
 
 def _config(key):
@@ -30,6 +31,11 @@ def _config(key):
     if config.get(key):
         return config.get(key)
     else:
+
+        if os.environ[key]:
+
+            return os.environ[key]
+
         print("--- config.json invalid. Exiting.")
         sys.exit()
 
