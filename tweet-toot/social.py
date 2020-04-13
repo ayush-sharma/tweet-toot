@@ -16,7 +16,7 @@ def get_tweets():
     """
 
     all_tweets = []
-    url = helpers._config("tweets.source_account_url")
+    url = helpers._config("TT_SOURCE_TWITTER_URL")
 
     if not url:
         helpers._error(
@@ -27,7 +27,7 @@ def get_tweets():
     headers = {}
     headers["accept-language"] = "en-US,en;q=0.9"
     headers["dnt"] = "1"
-    headers["user-agent"] = helpers._config("gen.APP_NAME")
+    headers["user-agent"] = helpers._config("TT_APP_NAME")
 
     data = requests.get(url)
     html = BeautifulSoup(data.text, "html.parser")
@@ -71,9 +71,9 @@ def toot_the_tweet(tweet):
         tweet {dictionary} -- Dictionary containing the "id" and "text" of a single tweet.
     """
 
-    host_instance = helpers._config("toots.host_instance")
-    token = helpers._config("toots.app_secure_token")
-    timestamp_file = helpers._config("toots.cache_path") + "last_tweet_tooted"
+    host_instance = helpers._config("TT_HOST_INSTANCE")
+    token = helpers._config("TT_APP_SECURE_TOKEN")
+    timestamp_file = helpers._config("TT_CACHE_PATH") + "last_tweet_tooted"
 
     if not host_instance:
         helpers._error(
