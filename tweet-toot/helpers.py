@@ -69,7 +69,7 @@ def _read_file(path):
         file = open(path)
         data = file.read()
         file.close()
-    
+
     except Exception as e:
 
         _error("Exception reading file.")
@@ -94,7 +94,7 @@ def _write_file(path, data):
 
     except Exception as e:
 
-        _error('Exception writing file.')
+        _error("Exception writing file.")
         _error(e)
 
         return False
