@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import encodings.idna
-import helpers
-import social
 import logging
 import sys
 
+import helpers
+import social
 
 if __name__ == "__main__":
 

@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
-import helpers
-import requests
-from bs4 import BeautifulSoup
-from pathlib import Path
 import base64
 import logging
+from pathlib import Path
+
+import requests
+from bs4 import BeautifulSoup
+
+import helpers
 
 logger = logging.getLogger(__name__)
 
