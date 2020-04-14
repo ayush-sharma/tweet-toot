@@ -3,6 +3,7 @@
 import encodings.idna
 import helpers
 import social
+import logging
 import sys
 
 
@@ -14,16 +15,24 @@ if __name__ == "__main__":
     It will only toot once per invokation to avoid flooding the instance.
     """
 
+    # Initialize common logging options
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+
     tweets = social.get_tweets()
 
     if not tweets:
-        helpers._error("__main__ => No tweets fetched.")
-        sys.exit()
+        logger.error("__main__ => No tweets fetched.")
 
-    helpers._info(f"__main__ => {len(tweets)} tweets fetched.")
+    else:
 
-    for tweet in tweets:
-        if social.toot_the_tweet(tweet):
-            helpers._info(f'__main__ => Tooted "{tweet["text"]}"')
-            helpers._info("__main__ => Tooting less is tooting more. Sleeping...")
-            sys.exit()
+        logger.info(f"__main__ => {len(tweets)} tweets fetched.")
+
+        for tweet in tweets:
+            if social.toot_the_tweet(tweet):
+                logger.info(f'__main__ => Tooted "{tweet["text"]}"')
+                logger.info("__main__ => Tooting less is tooting more. Sleeping...")
+                sys.exit()

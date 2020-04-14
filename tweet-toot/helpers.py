@@ -5,6 +5,9 @@ import json
 from pathlib import Path
 import sys
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def _config(key):
@@ -16,46 +19,32 @@ def _config(key):
 
     my_file = _read_file("config.json")
     if not my_file:
-        print("--- Main config.json file not found. Exiting.")
+
+        logger.critical("Main config.json file not found. Exiting.")
         sys.exit()
 
     try:
 
         config = json.loads(my_file)
 
-    except:
+    except Exception as e:
 
-        print("--- config.json invalid. Exiting.")
+        logger.critical("config.json invalid. Exiting.")
+        logger.debug(e)
         sys.exit()
 
     if config.get(key):
+
         return config.get(key)
+    
     else:
 
         if os.environ[key]:
 
             return os.environ[key]
 
-        print("--- config.json invalid. Exiting.")
+        logger.critical(f"{key} not found in config.json or in the environment. Exiting.")
         sys.exit()
-
-
-def _info(message):
-    """ Print info messages to the console.
-
-    Arguments:
-    message {string} -- Log message.
-    """
-    print(f" _info > {message}")
-
-
-def _error(message):
-    """ Print error messages to the console.
-
-    Arguments:
-    message {string} -- Log message.
-    """
-    print(f" _error > {message}")
 
 
 def _read_file(path):
@@ -78,8 +67,8 @@ def _read_file(path):
 
     except Exception as e:
 
-        _error("Exception reading file.")
-        _error(e)
+        logger.critical("Exception reading file.")
+        logger.critical(e)
 
     return data
 
@@ -100,8 +89,8 @@ def _write_file(path, data):
 
     except Exception as e:
 
-        _error("Exception writing file.")
-        _error(e)
+        logger.critical("Exception writing file.")
+        logger.critical(e)
 
         return False
 
