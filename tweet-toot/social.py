@@ -1,11 +1,18 @@
-import helpers
+#!/usr/bin/env python3
+
+import base64
+import logging
+from pathlib import Path
+
 import requests
 from bs4 import BeautifulSoup
-from pathlib import Path
-import base64
+
+import helpers
+
+logger = logging.getLogger(__name__)
 
 
-def getTweets():
+def get_tweets():
     """ Get list of tweets, with tweet ID and content, from configured Twitter account URL.
 
     This function relies on BeautifulSoup to extract the tweet IDs and content of all tweets on the specified page.
@@ -14,30 +21,30 @@ def getTweets():
     """
 
     all_tweets = []
-    url = helpers._config("tweets.source_account_url")
+    url = helpers._config("TT_SOURCE_TWITTER_URL")
 
     if not url:
-        helpers._error(
-            f"getTweets() => The source Twitter account URL ({url}) was incorrect. Could not retrieve tweets."
+        logger.error(
+            f"get_tweets() => The source Twitter account URL ({url}) was incorrect. Could not retrieve tweets."
         )
         return False
 
     headers = {}
     headers["accept-language"] = "en-US,en;q=0.9"
     headers["dnt"] = "1"
-    headers["user-agent"] = helpers._config("gen.APP_NAME")
+    headers["user-agent"] = helpers._config("TT_APP_NAME")
 
     data = requests.get(url)
     html = BeautifulSoup(data.text, "html.parser")
     timeline = html.select("#timeline li.stream-item")
 
     if timeline is None:
-        helpers._error(
-            f"getTweets() => Could not retrieve tweets from the page. Please make sure the source Twitter account URL ({url}) is correct."
+        logger.error(
+            f"get_tweets() => Could not retrieve tweets from the page. Please make sure the source Twitter account URL ({url}) is correct."
         )
         return False
 
-    helpers._info(f"getTweets() => Fetched tweets for {url}.")
+    logger.info(f"get_tweets() => Fetched tweets for {url}.")
 
     for tweet in timeline:
 
@@ -51,14 +58,14 @@ def getTweets():
 
         except Exception as e:
 
-            helpers._error("getTweets() => No tweet text found.")
-            helpers._error(e)
+            logger.error("get_tweets() => No tweet text found.")
+            logger.error(e)
             continue
 
     return all_tweets if len(all_tweets) > 0 else None
 
 
-def tootTheTweet(tweet):
+def toot_the_tweet(tweet):
     """ Receieve a dictionary containing Tweet ID and text... and TOOT!
 
     This function relies on the requests library to post the content to your Mastodon account (human or bot).
@@ -69,18 +76,18 @@ def tootTheTweet(tweet):
         tweet {dictionary} -- Dictionary containing the "id" and "text" of a single tweet.
     """
 
-    host_instance = helpers._config("toots.host_instance")
-    token = helpers._config("toots.app_secure_token")
-    timestamp_file = helpers._config("toots.cache_path") + "last_tweet_tooted"
+    host_instance = helpers._config("TT_HOST_INSTANCE")
+    token = helpers._config("TT_APP_SECURE_TOKEN")
+    timestamp_file = helpers._config("TT_CACHE_PATH") + "last_tweet_tooted"
 
     if not host_instance:
-        helpers._error(
-            f"tootTheTweet() => Your host Mastodon instance URL ({host_instance}) was incorrect."
+        logger.error(
+            f"toot_the_tweet() => Your host Mastodon instance URL ({host_instance}) was incorrect."
         )
         return False
 
     if not token:
-        helpers._error("tootTheTweet() => Your Mastodon access token was incorrect.")
+        logger.error("toot_the_tweet() => Your Mastodon access token was incorrect.")
         return False
 
     last_timestamp = helpers._read_file(timestamp_file)
@@ -102,26 +109,26 @@ def tootTheTweet(tweet):
 
     if tweet["time"] <= last_timestamp:
 
-        print("tootTheTweet() => No new tweets. Moving on.")
+        logger.info("toot_the_tweet() => No new tweets. Moving on.")
 
         return None
 
     last_timestamp = helpers._write_file(timestamp_file, str(tweet["time"]))
 
-    helpers._info(f'tootTheTweet() => New tweet {tweet["id"]} => "{tweet["text"]}".')
+    logger.info(f'toot_the_tweet() => New tweet {tweet["id"]} => "{tweet["text"]}".')
 
     response = requests.post(
         url=f"{host_instance}/api/v1/statuses", data=data, headers=headers
     )
 
     if response.status_code == 200:
-        helpers._info(f"tootTheTweet() => OK. Posted tweet {tweet['id']} to Mastodon.")
-        helpers._info(f"tootTheTweet() => Response: {response.text}")
+        logger.info(f"toot_the_tweet() => OK. Posted tweet {tweet['id']} to Mastodon.")
+        logger.info(f"toot_the_tweet() => Response: {response.text}")
         return True
 
     else:
-        helpers._info(
-            f"tootTheTweet() => FAIL. Could not post tweet {tweet['id']} to Mastodon."
+        logger.info(
+            f"toot_the_tweet() => FAIL. Could not post tweet {tweet['id']} to Mastodon."
         )
-        helpers._info(f"tootTheTweet() => Response: {response.text}")
+        logger.info(f"toot_the_tweet() => Response: {response.text}")
         return False

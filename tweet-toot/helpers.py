@@ -1,53 +1,52 @@
+#!/usr/bin/env python3
+
 import datetime
 import json
-from pathlib import Path
+import logging
+import os
 import sys
+from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 def _config(key):
-    """ Return configuration values from the config.json file.
+    """ Return configuration values from the config.json file or the environment.
 
     Arguments:
-    key {string} -- Name of the key in the config.json file.
+    key {string} -- Name of the config key.
     """
+
+    if key in os.environ:
+
+        return os.environ[key]
 
     my_file = _read_file("config.json")
     if not my_file:
-        print("--- Main config.json file not found. Exiting.")
+
+        logger.critical("Main config.json file not found. Exiting.")
         sys.exit()
 
     try:
 
         config = json.loads(my_file)
 
-    except:
+    except Exception as e:
 
-        print("--- config.json invalid. Exiting.")
+        logger.critical("config.json invalid. Exiting.")
+        logger.debug(e)
         sys.exit()
 
     if config.get(key):
+
         return config.get(key)
+
     else:
-        print("--- config.json invalid. Exiting.")
+
+        logger.critical(
+            f"{key} not found in config.json or in the environment. Exiting."
+        )
         sys.exit()
-
-
-def _info(message):
-    """ Print info messages to the console.
-
-    Arguments:
-    message {string} -- Log message.
-    """
-    print(f" _info > {message}")
-
-
-def _error(message):
-    """ Print error messages to the console.
-
-    Arguments:
-    message {string} -- Log message.
-    """
-    print(f" _error > {message}")
 
 
 def _read_file(path):
@@ -67,11 +66,11 @@ def _read_file(path):
         file = open(path)
         data = file.read()
         file.close()
-    
+
     except Exception as e:
 
-        _error("Exception reading file.")
-        _error(e)
+        logger.critical("Exception reading file.")
+        logger.critical(e)
 
     return data
 
@@ -92,8 +91,8 @@ def _write_file(path, data):
 
     except Exception as e:
 
-        _error('Exception writing file.')
-        _error(e)
+        logger.critical("Exception writing file.")
+        logger.critical(e)
 
         return False
 

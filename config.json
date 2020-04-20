@@ -1,8 +1,0 @@
-{
-	"gen.APP_NAME": "Tweet-Toot",
-	"gen.log_timestamp": "%Y-%m-%d %H:%M:%S",
-	"tweets.source_account_url": "https://twitter.com/SarcasmMother",
-	"toots.host_instance": "https://botsin.space",
-	"toots.app_secure_token": "",
-	"toots.cache_path": "/tmp/"
-}
