@@ -11,10 +11,10 @@ logger = logging.getLogger(__name__)
 
 
 def _config(key):
-    """ Return configuration values from the config.json file.
+    """ Return configuration values from the config.json file or the environment.
 
     Arguments:
-    key {string} -- Name of the key in the config.json file.
+    key {string} -- Name of the config key.
     """
 
     my_file = _read_file("config.json")
@@ -36,14 +36,16 @@ def _config(key):
     if config.get(key):
 
         return config.get(key)
-    
+
     else:
 
         if os.environ[key]:
 
             return os.environ[key]
 
-        logger.critical(f"{key} not found in config.json or in the environment. Exiting.")
+        logger.critical(
+            f"{key} not found in config.json or in the environment. Exiting."
+        )
         sys.exit()
 
 
