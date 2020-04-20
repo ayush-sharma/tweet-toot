@@ -1,5 +1,7 @@
 name: Docker Image CI
 
+uses: docker/build-push-action@v1.0.1
+
 on:
   push:
     tags: "*"
@@ -11,6 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build -t tweet-toot:$GITHUB_SHA -f Dockerfile tweet-toot
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v1.0.1
+      with:
+        username: $DOCKER_U
+        password: $DOCKER_P
+        repository: ayushsharma22/tweet-toot
+        tag_with_sha: true
+        labels: latest
+        push: true
+
+
