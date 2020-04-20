@@ -1,0 +1,16 @@
+name: Docker Image CI
+
+on:
+  push:
+    tags: "*"
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build -t tweet-toot:$GITHUB_SHA -f Dockerfile tweet-toot
