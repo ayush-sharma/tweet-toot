@@ -17,6 +17,10 @@ def _config(key):
     key {string} -- Name of the config key.
     """
 
+    if key in os.environ:
+
+        return os.environ[key]
+
     my_file = _read_file("config.json")
     if not my_file:
 
@@ -38,10 +42,6 @@ def _config(key):
         return config.get(key)
 
     else:
-
-        if os.environ[key]:
-
-            return os.environ[key]
 
         logger.critical(
             f"{key} not found in config.json or in the environment. Exiting."
