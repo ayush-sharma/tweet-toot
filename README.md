@@ -25,10 +25,11 @@ Once you have the above, just follow these steps:
 
 3. In `config.json`, update the following:
 
-- `TT_SOURCE_TWITTER_URL`: The Twitter account URL.
-- `TT_HOST_INSTANCE`: The Mastodon instance URL.
-- `TT_APP_SECURE_TOKEN`: The Mastodon app access token.
+- `TT_SOURCE_TWITTER_URL`: The Twitter account URL. Separate multiple value with `,`.
+- `TT_HOST_INSTANCE`: The Mastodon instance URL. Separate multiple value with `,`.
+- `TT_APP_SECURE_TOKEN`: The Mastodon app access token. Separate multiple value with `,`.
 - `TT_CACHE_PATH`: Cache path. This is where we keep the last tweet, so keep this fixed.
+- `TT_MODE`: Mode for Tweet-Toot when multiple Twitter or Mastodon URLs are provided. See details below.
 
 For example:
 
@@ -98,6 +99,30 @@ I've added a `Dockerfile` with this repo so you can get up and running with Dock
    We need `TT_CACHE_PATH` same across `docker run`s, so we're mounting a local directory into the container's `/tmp`. Customise as you see fit.
    
    To override more config paramters, just pass more `-e`s to Docker.
+
+---
+
+## What's up with `TT_MODE`?
+As Tweet-Toot has grown, there have been requests over the years to allow relaying many Twitter accounts to the same Mastodon instance, or relay one Twitter account to many Mastodons, etc. As you can imagine, there are 4 possible scenarios:
+
+1. One Twitter account posts to a single Mastodon (default behaviour).
+2. One Twitter account posts to many Mastodons.
+3. Many Twitter accounts post to a single Mastodon.
+4. Many Twitter accounts post to many Mastodons.
+
+The way this works is this. The `TT_SOURCE_TWITTER_URL`, `TT_HOST_INSTANCE`, and `TT_APP_SECURE_TOKEN` values are split by `,`, and the rest of the processing follows the value of `TT_MODE`.
+
+- `TT_MODE: one-to-one`: In this mode, the first Twitter URL is picked and it is relayed to the first Mastodon URL/Token combination. This repeats until we run out of Twitter URLs or Mastodon URLs. The number of Twitter accounts must be equal to the number of Mastodon URLs/tokens to avoid wierdness.
+
+- `TT_MODE: one-to-many`: In this mode, the first Twitter URL is picked and relayed to all Mastodon instances. Then the next Twitter URL is picked. 
+
+- `TT_MODE: many-to-one`: In this mode, every Twitter account is relayed to a single Mastodon instance.
+
+- `TT_MODE: many-to-many`: In this mode, every Twitter account is relayed to all Mastodon instances.
+
+Remember, the number of values in `TT_HOST_INSTANCE` and `TT_APP_SECURE_TOKEN` should always be equal so that we can pick the token for every instance.
+
+This `,` structure is put in place so that the `config.json` values can still be specified as `env` variables.
 
 ---
 
