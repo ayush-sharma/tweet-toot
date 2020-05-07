@@ -148,7 +148,7 @@ class TweetToot:
 
                 continue
 
-        return {k: tweets[k] for k in sorted(tweets)} if len(tweets) > 0 else None
+        return {k: tweets[k] for k in sorted(tweets, reverse=True)} if len(tweets) > 0 else None
 
     def _get_last_timestamp(self):
 
