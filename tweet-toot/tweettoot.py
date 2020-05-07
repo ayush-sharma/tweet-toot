@@ -121,7 +121,7 @@ class TweetToot:
             return False
 
         logger.info(
-            f"get_tweets() => Fetched {len(tweets)} new tweets for {self.twitter_url}."
+            f"get_tweets() => Fetched {len(timeline)} new tweets for {self.twitter_url}."
         )
 
         for tweet in timeline:
