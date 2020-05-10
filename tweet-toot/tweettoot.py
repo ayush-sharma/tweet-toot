@@ -34,38 +34,38 @@ class TweetToot:
 
         :type self:
         :param self:
-    
+
         :raises:
-    
+
         :rtype: bool
         """
 
         if not self.app_name:
 
-            logger.error(f"relay() => Application name in config is incorrect/empty.")
+            logger.error("relay() => Application name in config is incorrect/empty.")
 
             return False
 
         if not self.twitter_url:
 
-            logger.error(f"relay() => Twitter URL in config is incorrect/empty.")
+            logger.error("relay() => Twitter URL in config is incorrect/empty.")
 
             return False
 
         if not self.mastodon_url:
 
-            logger.error(f"relay() => Mastodon URL in config is incorrect/empty.")
+            logger.error("relay() => Mastodon URL in config is incorrect/empty.")
 
             return False
 
         if not self.mastodon_token:
 
-            logger.error(f"relay() => Mastodon token in config is incorrect/empty.")
+            logger.error("relay() => Mastodon token in config is incorrect/empty.")
 
             return False
 
         logger.info(
-            f"relay() => Init relay from {self.twitter_url} to {self.mastodon_url}. State file {self._get_timestamp_file_path()}"
+            "relay() => Init relay from {} to {}. State file {}".format(self.twitter_url, self.mastodon_url, self._get_timestamp_file_path())
         )
 
         tweets = self._get_tweets()
@@ -74,11 +74,11 @@ class TweetToot:
 
             return True
 
-        logger.debug(f"relay() => {str(tweets)}")
+        logger.debug("relay() => {}".format(str(tweets)))
 
         for tweet_time, tweet in tweets.items():
 
-            logger.info(f"relay() => Tweeting {tweet['id']} to {self.mastodon_url}")
+            logger.info("relay() => Tweeting {} to {}".format(tweet['id'], self.mastodon_url))
 
             self._toot_the_tweet(
                 mastodon_url=self.mastodon_url,
@@ -116,12 +116,12 @@ class TweetToot:
         if timeline is None:
 
             logger.error(
-                f"get_tweets() => Could not retrieve tweets from the page. Please make sure the source Twitter URL ({self.twitter_url}) is correct."
+                "get_tweets() => Could not retrieve tweets from the page. Please make sure the source Twitter URL ({}) is correct.".format(self.twitter_url)
             )
             return False
 
         logger.info(
-            f"get_tweets() => Fetched {len(tweets)} new tweets for {self.twitter_url}."
+            "get_tweets() => Fetched {} new tweets for {}.".format(len(tweets), self.twitter_url)
         )
 
         for tweet in timeline:
@@ -210,26 +210,26 @@ class TweetToot:
         """ Receieve a dictionary containing Tweet ID and text... and TOOT!
         This function relies on the requests library to post the content to your Mastodon account (human or bot).
         A boolean success status is returned.
-            
+
         :type self:
         :param self:
-    
+
         :type tweet_id:str:
         :param tweet_id:str: Tweet ID.
-    
+
         :type tweet_body:str:
         :param tweet_body:str: Tweet text.
-    
+
         :type tweet_time:int:
         :param tweet_time:int: Tweet timestamp.
 
         :raises:
-    
+
         :rtype: bool
         """
 
         headers = {}
-        headers["Authorization"] = f"Bearer {self.mastodon_token}"
+        headers["Authorization"] = "Bearer {}".format(self.mastodon_token)
         headers["Idempotency-Key"] = tweet_id
 
         data = {}
@@ -237,15 +237,15 @@ class TweetToot:
         data["visibility"] = "public"
 
         response = requests.post(
-            url=f"{mastodon_url}/api/v1/statuses", data=data, headers=headers
+            url="{}/api/v1/statuses".format(mastodon_url), data=data, headers=headers
         )
 
         if response.status_code == 200:
 
             logger.info(
-                f"toot_the_tweet() => OK. Tooted {tweet_id} to {self.mastodon_url}."
+                "toot_the_tweet() => OK. Tooted {} to {}.".format(tweet_id, self.mastodon_url)
             )
-            logger.debug(f"toot_the_tweet() => Response: {response.text}")
+            logger.debug("toot_the_tweet() => Response: {}".format(response.text))
 
             self._set_last_timestamp(timestamp=tweet_time)
 
@@ -254,8 +254,8 @@ class TweetToot:
         else:
 
             logger.error(
-                f"toot_the_tweet() => Could not toot {tweet_id} to {self.mastodon_url}."
+                "toot_the_tweet() => Could not toot {} to {self.mastodon_url}.".format(tweet_id)
             )
-            logger.debug(f"toot_the_tweet() => Response: {response.text}")
+            logger.debug("toot_the_tweet() => Response: {}".format(response.text))
 
             return False

@@ -33,12 +33,12 @@ if __name__ == "__main__":
     if len(mastodon_url) != len(mastodon_token):
 
         logger.error(
-            f"Lenghts of Mastodon URL ({len(mastodon_url)}) and Mastodon tokens ({len(mastodon_url)}) do not match."
+            "Lenghts of Mastodon URL ({}) and Mastodon tokens ({}) do not match.".format(len(mastodon_url), len(mastodon_url))
         )
 
     else:
 
-        logger.info(f"__main__ => Mode: {mode}")
+        logger.info("__main__ => Mode: {}".format(mode))
 
         if mode == "one-to-one":
 
@@ -47,7 +47,7 @@ if __name__ == "__main__":
             if len(twitter_url) != len(mastodon_url):
 
                 logger.error(
-                    f"In {mode}, the number of Twitter URLs and Mastodon hosts should be the same."
+                    "In {}, the number of Twitter URLs and Mastodon hosts should be the same.".format(mode)
                 )
 
                 sys.exit(0)
@@ -71,7 +71,7 @@ if __name__ == "__main__":
 
             if len(twitter_url) == 1:
 
-                logger.error(f"In {mode}, there can only be 1 Twitter URL.")
+                logger.error("In {}, there can only be 1 Twitter URL.".format(mode))
 
                 sys.exit(0)
 
@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
             if len(mastodon_url) != 1:
 
-                logger.error(f"In {mode}, there can only be 1 Mastodon host.")
+                logger.error("In {}, there can only be 1 Mastodon host.".format(mode))
 
                 sys.exit(0)
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
         else:
 
-            logger.critical(f"__main__ => {mode} incorrect.")
+            logger.critical("__main__ => {} incorrect.".format(mode))
 
             sys.exit(0)
 
