@@ -76,9 +76,15 @@ class TweetToot:
 
         logger.debug("relay() => {}".format(str(tweets)))
 
+        last_timestamp = 0
+
         for tweet_time, tweet in tweets.items():
 
             logger.info("relay() => Tweeting {} to {}".format(tweet['id'], self.mastodon_url))
+
+            last_timestamp = (
+                tweet_time if tweet_time > last_timestamp else last_timestamp
+            )
 
             self._toot_the_tweet(
                 mastodon_url=self.mastodon_url,
@@ -86,6 +92,8 @@ class TweetToot:
                 tweet_body=tweet["text"],
                 tweet_time=tweet_time,
             )
+
+        self._set_last_timestamp(timestamp=last_timestamp)
 
     def _get_tweets(self):
 
@@ -121,7 +129,7 @@ class TweetToot:
             return False
 
         logger.info(
-            "get_tweets() => Fetched {} new tweets for {}.".format(len(tweets), self.twitter_url)
+            "get_tweets() => Fetched {} new tweets for {}.".format(len(timeline), self.twitter_url)
         )
 
         for tweet in timeline:
@@ -148,7 +156,11 @@ class TweetToot:
 
                 continue
 
-        return {k: tweets[k] for k in sorted(tweets)} if len(tweets) > 0 else None
+        return (
+            {k: tweets[k] for k in sorted(tweets, reverse=True)}
+            if len(tweets) > 0
+            else None
+        )
 
     def _get_last_timestamp(self):
 
@@ -246,8 +258,6 @@ class TweetToot:
                 "toot_the_tweet() => OK. Tooted {} to {}.".format(tweet_id, self.mastodon_url)
             )
             logger.debug("toot_the_tweet() => Response: {}".format(response.text))
-
-            self._set_last_timestamp(timestamp=tweet_time)
 
             return True
 
