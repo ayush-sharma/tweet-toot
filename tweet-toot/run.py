@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-import encodings.idna
 import logging
 import sys
 
 import helpers
-import social
+import tweettoot
 
 if __name__ == "__main__":
 
@@ -22,17 +21,91 @@ if __name__ == "__main__":
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
-    tweets = social.get_tweets()
+    # Initialize variables
+    app_name = helpers._config("TT_APP_NAME")
+    separator = ","
+    twitter_url = helpers._config("TT_SOURCE_TWITTER_URL").split(separator)
+    mastodon_url = helpers._config("TT_HOST_INSTANCE").split(separator)
+    mastodon_token = helpers._config("TT_APP_SECURE_TOKEN").split(separator)
+    cache_path = helpers._config("TT_CACHE_PATH")
+    mode = helpers._config("TT_MODE")
 
-    if not tweets:
-        logger.error("__main__ => No tweets fetched.")
+    if len(mastodon_url) != len(mastodon_token):
+
+        logger.error(
+            f"Lenghts of Mastodon URL ({len(mastodon_url)}) and Mastodon tokens ({len(mastodon_url)}) do not match."
+        )
 
     else:
 
-        logger.info(f"__main__ => {len(tweets)} tweets fetched.")
+        logger.info(f"__main__ => Mode: {mode}")
 
-        for tweet in tweets:
-            if social.toot_the_tweet(tweet):
-                logger.info(f'__main__ => Tooted "{tweet["text"]}"')
-                logger.info("__main__ => Tooting less is tooting more. Sleeping...")
-                sys.exit()
+        if mode == "one-to-one":
+
+            # In this mode, the first Twitter URL is picked and it is relayed to the first Mastodon URL/Token combination. This repeats until we run out of Twitter URLs or Mastodon URLs. The number of Twitter accounts must be equal to the number of Mastodon URLs/tokens to avoid wierdness.
+
+            if len(twitter_url) != len(mastodon_url):
+
+                logger.error(
+                    f"In {mode}, the number of Twitter URLs and Mastodon hosts should be the same."
+                )
+
+                sys.exit(0)
+
+            for index_t, url_t in enumerate(twitter_url):
+
+                job = tweettoot.TweetToot(
+                    app_name=app_name,
+                    twitter_url=url_t,
+                    mastodon_url=mastodon_url[index_t],
+                    mastodon_token=mastodon_token[index_t],
+                )
+
+                job.relay()
+
+            sys.exit(0)
+
+        elif mode == "one-to-many":
+
+            # In this mode, the first Twitter URL is picked and relayed to all Mastodon instances. Then the next Twitter URL is picked.
+
+            if len(twitter_url) == 1:
+
+                logger.error(f"In {mode}, there can only be 1 Twitter URL.")
+
+                sys.exit(0)
+
+        elif mode == "many-to-one":
+
+            # In this mode, every Twitter account is relayed to a single Mastodon instance.
+
+            if len(mastodon_url) != 1:
+
+                logger.error(f"In {mode}, there can only be 1 Mastodon host.")
+
+                sys.exit(0)
+
+        elif mode == "many-to-many":
+
+            # In this mode, every Twitter account is relayed to all Mastodon instances.
+
+            pass
+
+        else:
+
+            logger.critical(f"__main__ => {mode} incorrect.")
+
+            sys.exit(0)
+
+        for index_t, url_t in enumerate(twitter_url):
+
+            for index_m, url_m in enumerate(mastodon_url):
+
+                job = tweettoot.TweetToot(
+                    app_name=app_name,
+                    twitter_url=url_t,
+                    mastodon_url=url_m,
+                    mastodon_token=mastodon_token[index_m],
+                )
+
+                job.relay()
