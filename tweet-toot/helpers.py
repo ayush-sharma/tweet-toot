@@ -44,7 +44,7 @@ def _config(key):
     else:
 
         logger.critical(
-            f"{key} not found in config.json or in the environment. Exiting."
+            "{} not found in config.json or in the environment. Exiting.".format(key)
         )
         sys.exit()
 

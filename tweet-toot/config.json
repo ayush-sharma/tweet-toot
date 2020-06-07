@@ -1,8 +1,0 @@
-{
-    "TT_APP_NAME": "Tweet-Toot",
-    "TT_SOURCE_TWITTER_URL": "https://twitter.com/internetofshit",
-    "TT_HOST_INSTANCE": "https://botsin.space",
-    "TT_APP_SECURE_TOKEN": "",
-    "TT_CACHE_PATH": "/tmp/",
-    "TT_MODE": "one-to-one"
-}
